@@ -24,7 +24,7 @@
             @forelse($posts as $post)
             <div class="bg-white overflow-hidden relative rounded-lg shadow-md border flex-auto">
                 <a href="{{ route('blog.show', $post) }}" class="h-full max-h-full flex flex-col">
-                    <img src="{{ asset($post->imagePath) }}" alt="{{$post->title}}" class=" border-b border-gray-300" />
+                    <img src="{{ asset($post->imagePrevPath) }}" alt="{{$post->title}}" class=" border-b border-gray-300" />
 
                     <div class="px-3 py-2 flex flex-col flex-auto">
                         <h4 class="border-b mb-1 text-lg font-medium">

@@ -14,6 +14,9 @@
                 <p style="color: red; margin-bottom:25px;">{{ $message }}</p>
                 @enderror
                 <!-- Image -->
+                <x-label for="img_prev" class="pt-5"><span>Изображение</span></x-label>
+                <input type="file" id="img_prev" name="img_prev" />
+                @error('image')
                 <x-label for="image" class="pt-5"><span>Изображение</span></x-label>
                 <input type="file" id="image" name="image" />
                 @error('image')

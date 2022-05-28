@@ -36,7 +36,7 @@ class PostController extends Controller
 
         $categories = Category::all();
 
-        return view('admin.posts.index', compact('posts', 'categories'));
+        return view('blog.index', compact('posts', 'categories'));
     }
 
     /**
@@ -80,7 +80,8 @@ class PostController extends Controller
         $body = $request->input('body');
 
         //File upload
-        $imagePath = 'storage/' . $request->file('image')->store('postsImages', 'public');
+        $imagePrevPath = 'storage/' . $request->file('img_prev')->store('preview', 'public');
+        $imagePath = 'storage/' . $request->file('image')->store('posts', 'public');
 
         $post = new Post();
         $post->title = $title;
@@ -88,6 +89,7 @@ class PostController extends Controller
         $post->slug = $slug;
         $post->user_id = $user_id;
         $post->body = $body;
+        $post->imagePrevPath = $imagePrevPath;
         $post->imagePath = $imagePath;
 
         $post->save();
@@ -163,5 +165,19 @@ class PostController extends Controller
         $post->delete();
 
         return back()->with('status', 'Пост был успешно удалён!');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  string  $slug
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Post $post)
+    {
+        $category = $post->category;
+
+        $relatedPosts = $category->posts()->where('id', '!=', $post->id)->latest()->take(3)->get();
+        return view('blog.show', compact('post', 'relatedPosts'));
     }
 }

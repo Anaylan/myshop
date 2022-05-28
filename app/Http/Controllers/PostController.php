@@ -32,18 +32,58 @@ class PostController extends Controller
     }
 
     /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+
+        $request->validate([
+            'title' => 'required',
+            'image' => 'required | image',
+            'body' => 'required',
+            'category_id' => 'required'
+        ]);
+
+        $title = $request->input('title');
+        $category_id = $request->input('category_id');
+
+        if (Post::latest()->first() !== null) {
+            $postId = Post::latest()->first()->id + 1;
+        } else {
+            $postId = 1;
+        }
+
+        $slug = Str::slug($title, '-') . '-' . $postId;
+        $user_id = Auth::user()->id;
+        $body = $request->input('body');
+
+        //File upload
+        $imagePrevPath = 'storage/' . $request->file('img_prev')->store('preview', 'public');
+        $imagePath = 'storage/' . $request->file('image')->store('posts', 'public');
+
+        $post = new Post();
+        $post->title = $title;
+        $post->category_id = $category_id;
+        $post->slug = $slug;
+        $post->user_id = $user_id;
+        $post->body = $body;
+        $post->imagePrevPath = $imagePrevPath;
+        $post->imagePath = $imagePath;
+
+        $post->save();
+
+        return redirect()->back()->with('status', 'Пост был успешно создан!');
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param  string  $slug
      * @return \Illuminate\Http\Response
      */
-    // public function show($slug)
-    // {
-    //     return view('blog.show')
-    //         ->with('post', Post::where('slug', $slug)->first());
-    // }
-
-    // Using Route model binding
     public function show(Post $post)
     {
         $category = $post->category;

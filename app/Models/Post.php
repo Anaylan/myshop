@@ -10,7 +10,7 @@ class Post extends Model
     use HasFactory;
 
 
-    protected $fillable = ['title', 'slug', 'description', 'image_path', 'user_id'];
+    protected $fillable = ['title', 'slug', 'description', 'imagePrev_path', 'image_path', 'user_id'];
 
     // We have post and it belongsTo a user
 
