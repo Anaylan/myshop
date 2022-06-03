@@ -7,6 +7,14 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('permission:category-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:category-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:category-delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,8 +22,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
-        return view('categories.index-categories', compact('categories'));
+        $categories = Category::latest()->paginate(10);
+        return view('admin.categories.index', compact('categories'));
     }
 
     /**
@@ -25,7 +33,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('categories.create-category');
+        return view('admin.categories.create');
     }
 
     /**
@@ -46,18 +54,7 @@ class CategoryController extends Controller
 
         $category->save();
 
-        return redirect()->back()->with('status', 'Category Created Successfully');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Category $category)
-    {
-        //
+        return to_route('admin.categories.index')->with('status', 'Категория была успешно создана');
     }
 
     /**
@@ -68,7 +65,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        return view('categories.edit-category', compact('category'));
+        return view('admin.categories.edit', compact('category'));
     }
 
     /**
@@ -89,8 +86,7 @@ class CategoryController extends Controller
         $category->name = $name;
 
         $category->save();
-
-        return redirect(route('categories.index'))->with('status', 'Category Edited Successfully');
+        return to_route('admin.categories.index')->with('status', 'Категория была успешно изменена');
     }
 
     /**
@@ -103,6 +99,6 @@ class CategoryController extends Controller
     {
         $category->delete();
 
-        return redirect()->back()->with('status', 'Category Deleted Successfully');
+        return redirect()->back()->with('status', 'Категория была успешно удалена');
     }
 }
