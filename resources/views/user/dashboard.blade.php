@@ -1,28 +1,87 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Личный кабинет') }}
-        </h2>
-    </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 bg-white border-b border-gray-200">
-                    Вы вошли!
+                <div class="card">
+                    <div class="card-header">t</div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            @foreach($orders as $order)
+                            <li class="list-group-item">
+                                <div class="card">
+                                    <div class="card-header">
+                                        order number：{{ $order->no }}
+                                        <span class="float-right">{{ $order->created_at->format('Y-m-d H:i:s') }}</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Product information</th>
+                                                    <th class="text-center">unit price</th>
+                                                    <th class="text-center">quantity</th>
+                                                    <th class="text-center">total order price</th>
+                                                    <th class="text-center">state</th>
+                                                    <th class="text-center">operate</th>
+                                                </tr>
+                                            </thead>
+                                            @foreach($order->items as $index => $item)
+                                            <tr>
+                                                <td class="product-info">
+                                                    <div class="preview">
+                                                        <a target="_blank" href="{{ route('products.show', [$item->product_id]) }}">
+                                                            <img src="{{ $item->product->image_url }}">
+                                                        </a>
+                                                    </div>
+                                                    <div>
+                                                        <span class="product-title">
+                                                            <a target="_blank" href="{{ route('products.show', [$item->product_id]) }}">{{ $item->product->title }}</a>
+                                                        </span>
+                                                        <span class="sku-title">{{ $item->productSku->title }}</span>
+                                                    </div>
+                                                </td>
+                                                <td class="sku-price text-center">￥{{ $item->price }}</td>
+                                                <td class="sku-amount text-center">{{ $item->amount }}</td>
+                                                @if($index === 0)
+                                                <td rowspan="{{ count($order->items) }}" class="text-center total-amount">￥{{ $order->total_amount }}</td>
+                                                <td rowspan="{{ count($order->items) }}" class="text-center">
+                                                    @if($order->paid_at)
+                                                    @if($order->refund_status === \App\Models\Order::REFUND_STATUS_PENDING)
+                                                    Paid
+                                                    @else
+                                                    {{ \App\Models\Order::$refundStatusMap[$order->refund_status] }}
+                                                    @endif
+                                                    @elseif($order->closed)
+                                                    Closed
+                                                    @else
+                                                    unpaid<br>
+                                                    Please {{ $order->created_at->addSeconds(config('app.order_ttl'))->format('H:i') }} before completing the payment<br>
+                                                    Otherwise the order will be closed automatically
+                                                    @endif
+                                                </td>
+                                                <td rowspan="{{ count($order->items) }}" class="text-center">
+                                                    <a class="btn btn-primary btn-sm" href="{{ route('orders.show', ['order' => $order->id]) }}">check order</a>
+                                                    <!-- 评价入口开始 -->
+                                                    @if($order->paid_at)
+                                                    <a class="btn btn-success btn-sm" href="{{ route('orders.review.show', ['order' => $order->id]) }}">
+                                                        {{ $order->reviewed ? 'View Reviews' : 'Evaluation' }}
+                                                    </a>
+                                                    @endif
+                                                    <!-- 评价入口结束 -->
+                                                </td>
+                                                @endif
+                                            </tr>
+                                            @endforeach
+                                        </table>
+                                    </div>
+                                </div>
+                            </li>
+                            @endforeach
+                        </ul>
+                        <div class="float-right">{{ $orders->render() }}</div>
+                    </div>
                 </div>
-
-                @role('user')
-
-                This is user role
-
-                @endrole
-
-                @role('admin')
-
-                This is admin role
-
-                @endrole
             </div>
         </div>
     </div>

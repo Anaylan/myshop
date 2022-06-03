@@ -9,9 +9,18 @@ use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role:admin');
+        $this->middleware('permission:role-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:role-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:role-delete', ['only' => ['destroy']]);
+    }
+
     public function index()
     {
-        $roles = Role::whereNotIn('name', ['admin'])->get();
+        $roles = Role::latest()->paginate(10);
+        // $posts = Post::latest()->paginate(10);
         return view('admin.roles.index', compact('roles'));
     }
 

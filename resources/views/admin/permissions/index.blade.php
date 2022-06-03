@@ -1,6 +1,7 @@
 <x-admin-layout>
     <div class="flex justify-end p-2">
-        <a href="{{ route('admin.permissions.create') }}" class="px-4 py-2 bg-green-700 hover:bg-green-500 rounded-md">Создать разрешение</a>
+        <a href="{{ route('admin.permissions.create') }}" class="px-4 duration-75 py-2 text-white hover:text-black bg-green-700 
+        hover:bg-green-500 rounded-md">Добавить разрешение</a>
     </div>
     <div class="flex flex-col">
         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -27,10 +28,10 @@
                                     <div class="flex justify-end">
                                         <div class="flex space-x-2">
                                             <a href="{{ route('admin.permissions.edit', $permission->id) }}" class="px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white rounded-md">Редактировать</a>
-                                            <form class="px-4 py-2 bg-red-500 hover:bg-red-700 text-white rounded-md" method="POST" action="{{ route('admin.permissions.destroy', $permission->id) }}" onsubmit="return confirm('Вы уверены?');">
+                                            <form method="POST" action="{{ route('admin.permissions.destroy', $permission->id) }}" onsubmit="return confirm('Вы уверены?');">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit">Удалить</button>
+                                                <button class="px-4 py-2 bg-red-500 hover:bg-red-700 text-white rounded-md" type="submit">Удалить</button>
                                             </form>
                                         </div>
                                     </div>
@@ -43,4 +44,7 @@
             </div>
         </div>
     </div>
+    <br>
+    {{ $permissions->links('pagination::tailwind') }}
+    <br>
 </x-admin-layout>

@@ -10,7 +10,7 @@ class Post extends Model
     use HasFactory;
 
 
-    protected $fillable = ['title', 'slug', 'description', 'imagePrev_path', 'image_path', 'user_id'];
+    protected $fillable = ['title', 'slug', 'description', 'img_prev', 'image', 'user_id'];
 
     // We have post and it belongsTo a user
 
@@ -19,10 +19,14 @@ class Post extends Model
         return $this->belongsTo(User::class);
     }
 
-    // We have a post and it belongsTo a category 
-
-    public function category()
+    public function product()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Product::class);
+    }
+
+    // We have a post and it morphMany a comments
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable')->whereNull('parent_id');
     }
 }

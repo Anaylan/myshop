@@ -9,22 +9,20 @@ class Order extends Model
 {
     use HasFactory;
 
-    const SHIP_STATUS_PENDING = 'pending';
-    const SHIP_STATUS_DELIVERED = 'delivered';
-    const SHIP_STATUS_RECEIVED = 'received';
-
-    public static $shipStatusMap = [
-        self::SHIP_STATUS_PENDING   => 'Not shipped',
-        self::SHIP_STATUS_DELIVERED => 'Shipped',
-        self::SHIP_STATUS_RECEIVED  => 'Received',
-    ];
+    const REFUND_STATUS_PENDING = 'pending';
+    const REFUND_STATUS_APPLIED = 'applied';
+    const REFUND_STATUS_PROCESSING = 'processing';
+    const REFUND_STATUS_SUCCESS = 'success';
+    const REFUND_STATUS_FAILED = 'failed';
 
     protected $fillable = [
         'user_id',
-        'total_amount',
-        'remark',
-        'status',
-        'payment_method'
+        'name',
+        'email',
+        'phone',
+        'address',
+        'comment',
+        'amount',
     ];
 
     public function user()

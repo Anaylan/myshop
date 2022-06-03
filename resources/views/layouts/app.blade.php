@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Goodshop') }}</title>
-
+    <link rel="shortcut icon" href="{{ asset('logo.svg') }}" type="image/x-icon" />
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,13 +21,13 @@
 </head>
 
 <body class="font-sans antialiased min-h-screen bg-gray-100">
-    <div class="min-h-full ">
+    <div class="min-h-screen flex-col flex">
         @include('layouts.navigation')
-
         <!-- Page Content -->
-        <main class="mt-8 ">
+        <main class="my-8 flex-auto">
             {{ $slot }}
         </main>
+        @include('layouts.footer')
     </div>
 </body>
 

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -23,13 +25,58 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::latest()->paginate(5);
-        return view('products.index', compact('products'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
+        // Создаём конструктор запросов
+        $builder = Product::latest()->orderBy('id', 'asc');
+
+        // search Параметры, используемые для продуктов совпадения
+        if ($search = $request->input('search', '')) {
+            $like = '%' . $search . '%';
+            // поиск по совпадениям: названию продукта, сведениям о продукте
+            $builder->where(function ($query) use ($like) {
+                $query->where('name', 'like', $like)
+                    ->orWhere('description', 'like', $like);
+            });
+        }
+        // Есть ли параметр заказа для отправки, если да, назначаем его переменной $order
+        // order Параметр используется для управления правилами сортировки товаров.
+        if ($order = $request->input('order', '')) {
+            // заканчивается ли он на _asc или _desc
+            if (preg_match('/^(.+)_(asc|desc)$/', $order, $m)) {
+                // Если начало строки является одной из этих 3 строк, это допустимое значение сортировки.
+                if (in_array($m[1], ['price', 'name'])) {
+                    // Создайте параметр сортировки на основе входящего значения сортировки.
+                    $builder->orderBy($m[1], $m[2]);
+                }
+            }
+        }
+
+        if ($request->filled('price_from')) {
+            $builder->where('price', '>=', $request->price_from);
+        }
+
+        if ($request->filled('price_to')) {
+            $builder->where('price', '<=', $request->price_to);
+        }
+
+        $products = $builder->paginate(15);
+        $categories = \App\Models\Category::all();
+
+        return view('products.index', [
+            'products' => $products,
+            'filters'  => [
+                'order'  => $order,
+            ],
+            'categories' => $categories
+        ]);
     }
 
+    public function admin()
+    {
+        $products = Product::latest()->paginate(10);
+        return view('admin.products.index', compact('products'));
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -37,7 +84,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('products.create');
+        $categories = Category::all();
+        return view('admin.products.create', compact('categories'));
     }
 
     /**
@@ -48,15 +96,27 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        request()->validate([
-            'name' => 'required',
-            'detail' => 'required',
-        ]);
+        $request->validate([]);
 
-        Product::create($request->all());
+        $title = $request->input('title');
+        $body = $request->input('body');
+        $price = $request->input('price');
+        $category = $request->input('category_id');
 
-        return redirect()->route('products.index')
-            ->with('success', 'Product created successfully.');
+        //File upload
+        $imagePath = 'storage/' . $request->file('image')->store('products', 'public');
+
+
+        $product = new Product();
+        $product->name = $title;
+        $product->price = $price;
+        $product->category_id = $category;
+        $product->description = $body;
+        $product->image = $imagePath;
+
+        $product->save();
+        return to_route('admin.products.index')
+            ->with('success', 'Товар был успешно создан.');
     }
 
     /**
@@ -67,7 +127,9 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return view('products.show', compact('product'));
+        $category = $product->category;
+        $relatedProducts = $category->products()->where('id', '!=', $product->id)->latest()->get();
+        return view('products.show', compact('product', 'relatedProducts'));
     }
 
     /**
@@ -78,7 +140,8 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return view('products.edit', compact('product'));
+        $categories = Category::all();
+        return view('admin.products.edit', compact('product', 'categories'));
     }
 
     /**
@@ -91,14 +154,31 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         request()->validate([
-            'name' => 'required',
-            'detail' => 'required',
+            'title' => 'required',
+            'image' => 'required | image',
+            'body' => 'required',
+            'category_id' => 'required'
         ]);
 
-        $product->update($request->all());
+        $title = $request->input('title');
 
-        return redirect()->route('products.index')
-            ->with('success', 'Product updated successfully');
+        $body = $request->input('body');
+        $price = $request->input('price');
+        $category = $request->input('category_id');
+
+        //File upload
+        $imagePath = 'storage/' . $request->file('image')->store('products', 'public');
+
+        $product->name = $title;
+        $product->price = $price;
+        $product->category_id = $category;
+        $product->description = $body;
+        $product->image = $imagePath;
+
+        $product->save();
+
+        return to_route('admin.products.index')
+            ->with('success', 'Товар был успешно изменён.');
     }
 
     /**
@@ -111,7 +191,7 @@ class ProductController extends Controller
     {
         $product->delete();
 
-        return redirect()->route('products.index')
-            ->with('success', 'Product deleted successfully');
+        return to_route('admin.products.index')
+            ->with('success', 'Товар был удалён');
     }
 }

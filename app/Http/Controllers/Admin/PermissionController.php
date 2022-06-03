@@ -9,9 +9,17 @@ use Spatie\Permission\Models\Role;
 
 class PermissionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role:admin');
+        $this->middleware('permission:permission-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:permission-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:permission-delete', ['only' => ['destroy']]);
+    }
+
     public function index()
     {
-        $permissions = Permission::all();
+        $permissions = Permission::latest()->paginate(10);;
         return view('admin.permissions.index', compact('permissions'));
     }
 

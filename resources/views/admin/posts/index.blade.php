@@ -1,6 +1,7 @@
 <x-admin-layout>
     <div class="flex justify-end p-2 mb-2">
-        <a href="{{ route('admin.news.create') }}" class="px-4 py-2 bg-green-700 text-white hover:bg-green-500 rounded-md">Создать запись</a>
+        <a href="{{ route('admin.news.create') }}" class="px-4 py-2 bg-green-700 text-white hover:text-black hover:bg-green-500
+         rounded-md duration-75">Создать запись</a>
     </div>
     <div class="flex flex-col">
         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -26,11 +27,11 @@
                                 <td>
                                     <div class="flex justify-end">
                                         <div class="flex space-x-2">
-                                            <a href="{{ route('admin.news.edit', $post) }}" class="px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white rounded-md">Редактировать</a>
-                                            <form class="px-4 py-2 bg-red-500 hover:bg-red-700 text-white rounded-md" method="POST" action="{{ route('admin.posts.destroy', $post) }}" onsubmit="return confirm('Вы уверены?');">
+                                            <a href="{{ route('admin.news.edit', ['news' => $post->id]) }}" class="px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white rounded-md">Редактировать</a>
+                                            <form method="POST" action="{{ route('admin.news.destroy', ['news' => $post]) }}" onsubmit="return confirm('Вы уверены?');">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit">Удалить</button>
+                                                <button class="px-4 py-2 bg-red-500 hover:bg-red-700 text-white rounded-md" type="submit">Удалить</button>
                                             </form>
                                         </div>
                                     </div>

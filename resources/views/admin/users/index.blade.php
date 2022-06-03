@@ -32,10 +32,10 @@
                                     <div class="flex justify-end">
                                         <div class="flex space-x-2">
                                             <a href="{{ route('admin.users.show', $user->id) }}" class="px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white rounded-md">Роли</a>
-                                            <form class="px-4 py-2 bg-red-500 hover:bg-red-700 text-white rounded-md" method="POST" action="{{ route('admin.users.destroy', $user->id) }}" onsubmit="return confirm('Вы уверены?');">
+                                            <form method="POST" action="{{ route('admin.users.destroy', $user->id) }}" onsubmit="return confirm('Вы уверены?');">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit">Удалить</button>
+                                                <button class="px-4 py-2 bg-red-500 hover:bg-red-700 text-white rounded-md" type="submit">Удалить</button>
                                             </form>
                                         </div>
                                     </div>
@@ -48,4 +48,7 @@
             </div>
         </div>
     </div>
+    <br>
+    {{ $users->links('pagination::tailwind') }}
+    <br>
 </x-admin-layout>

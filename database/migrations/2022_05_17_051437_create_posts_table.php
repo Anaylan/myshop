@@ -9,7 +9,7 @@ return new class extends Migration
     /**
      * Run the migrations.
      *
-     *         
+     *
      * @return void
      */
     public function up()
@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug');
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreignId('category_id')->references('id')->on('categories')->onDelete('cascade');
-            $table->string('imagePath');
+            $table->string('img_prev');
+            $table->string('image');
             $table->text('body');
             $table->timestamps();
         });

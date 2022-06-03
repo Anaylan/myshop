@@ -1,6 +1,7 @@
 <x-admin-layout>
     <div class="flex justify-end p-2">
-        <a href="{{ route('admin.roles.create') }}" class="px-4 py-2 bg-green-700 hover:bg-green-500 rounded-md">Создать роль</a>
+        <a href="{{ route('admin.roles.create') }}" class="px-4 py-2 duration-75 text-white hover:text-black bg-green-700 hover:bg-green-500 
+                rounded-md">Добавить роль</a>
     </div>
     <div class="flex flex-col">
         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -27,10 +28,10 @@
                                     <div class="flex justify-end">
                                         <div class="flex space-x-2">
                                             <a href="{{ route('admin.roles.edit', $role->id) }}" class="px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white rounded-md">Редактировать</a>
-                                            <form class="px-4 py-2 bg-red-500 hover:bg-red-700 text-white rounded-md" method="POST" action="{{ route('admin.roles.destroy', $role->id) }}" onsubmit="return confirm('Are you sure?');">
+                                            <form method="POST" action="{{ route('admin.roles.destroy', $role->id) }}" onsubmit="return confirm('Are you sure?');">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit">Удалить</button>
+                                                <button class="px-4 py-2 bg-red-500 hover:bg-red-700 text-white rounded-md" type="submit">Удалить</button>
                                             </form>
                                         </div>
                                     </div>
@@ -43,4 +44,7 @@
             </div>
         </div>
     </div>
+    <br>
+    {{ $roles->links('pagination::tailwind') }}
+    <br>
 </x-admin-layout>

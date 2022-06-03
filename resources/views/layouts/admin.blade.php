@@ -38,7 +38,7 @@
                 </div>
                 <div class="order-2 flex-shrink-0 sm:order-3 sm:ml-3">
                     <button @click="open = false" type="button" class="-mr-1 flex p-2 rounded-md hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-white sm:-mr-2">
-                        <span class="sr-only">Dismiss</span>
+                        <span class="sr-only">Отклонить</span>
                         <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
@@ -51,7 +51,7 @@
     <div class="flex-col w-full md:flex md:flex-row md:min-h-screen">
         <div @click.away="open = false" class="flex flex-col flex-shrink-0 w-full text-gray-700 bg-white md:w-64 dark:text-gray-200 dark:bg-gray-800" x-data="{ open: false }">
             <div class="flex flex-row items-center justify-between flex-shrink-0 px-8 py-4">
-                <a href="#" class="text-lg font-semibold tracking-widest text-gray-900 uppercase rounded-lg dark:text-white focus:outline-none focus:shadow-outline">Панель управления</a>
+                <a href="{{route('admin.index')}}" class="text-lg font-semibold tracking-widest text-gray-900 uppercase rounded-lg dark:text-white focus:outline-none focus:shadow-outline">Панель управления</a>
                 <button class="rounded-lg md:hidden focus:outline-none focus:shadow-outline" @click="open = !open">
                     <svg fill="currentColor" viewBox="0 0 20 20" class="w-6 h-6">
                         <path x-show="!open" fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM9 15a1 1 0 011-1h6a1 1 0 110 2h-6a1 1 0 01-1-1z" clip-rule="evenodd"></path>
@@ -60,11 +60,12 @@
                 </button>
             </div>
             <nav class="flex-grow px-4 pb-4 flex flex-col max-h-full overflow-hidden">
-                <x-admin-link :href="route('admin.roles.index')" :active="request()->routeIs('admin.roles.index')">Роли
-                </x-admin-link>
+                <x-admin-link :href="route('admin.roles.index')" :active="request()->routeIs('admin.roles.index')">Роли</x-admin-link>
                 <x-admin-link :href="route('admin.permissions.index')" :active="request()->routeIs('admin.permissions.index')">Разрешения</x-admin-link>
                 <x-admin-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.index')">Пользователи</x-admin-link>
                 <x-admin-link :href="route('admin.news.index')" :active="request()->routeIs('admin.news.index')">Посты</x-admin-link>
+                <x-admin-link :href="route('admin.categories.index')" :active="request()->routeIs('admin.categories.index')">Категории</x-admin-link>
+                <x-admin-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.index')">Товары</x-admin-link>
                 <div @click.away="open = false" class="relative" x-data="{ open: false }">
                     <button @click="open = !open" class="flex flex-row items-center w-full px-4 py-2 mt-2 text-sm font-semibold text-left bg-transparent rounded-lg dark:bg-transparent dark:focus:text-white dark:hover:text-white dark:focus:bg-gray-600 dark:hover:bg-gray-600 md:block hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline">
                         <span>{{ Auth::user()->name }}</span>

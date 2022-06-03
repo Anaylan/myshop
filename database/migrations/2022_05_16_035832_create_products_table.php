@@ -16,10 +16,12 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->double('price');
             $table->text('description');
-            $table->string('img_prev');
+            $table->foreignId('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->string('image');
+            $table->unsignedInteger('sold_count')->default(0);
+            $table->unsignedInteger('review_count')->default(0);
+            $table->decimal('price', 10, 2);
             $table->timestamps();
         });
     }

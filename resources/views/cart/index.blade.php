@@ -1,9 +1,11 @@
 <x-app-layout>
     <div class="container px-6 mx-auto">
-        <h1 class=" text-2xl font-extrabold">Корзина</h1>
+        <h1 class="text-2xl font-extrabold">Корзина</h1>
         <div class="flex justify-center my-6">
             <div class="flex flex-col w-full p-8 text-gray-800 rounded-lg bg-white shadow-lg">
                 <div class="flex-1">
+                    @if (isset($cartItems))
+
                     <table class="w-full text-sm lg:text-base" cellspacing="0">
                         <thead>
                             <tr class="h-12 uppercase">
@@ -36,25 +38,18 @@
                                                 <small>(Удалить)</small>
                                             </button>
                                         </form>
+
                                     </a>
                                 </td>
                                 <td class="justify-center mt-6 md:justify-end md:flex">
                                     <div class="flex flex-row justify-end h-8">
-                                        <form action="{{ route('cart.update') }}" class="flex gap-2 border items-center rounded-md shadow-sm" method="POST">
+                                        <form action="{{ route('cart.update') }}" method="post" class="my-auto">
                                             @csrf
-                                            <input type="hidden" name="id" value="{{ $item->id}}">
-
-                                            <button class="text-gray-500 focus:outline-none focus:text-gray-600">
-                                                <svg class="h-5 w-5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                                </svg>
-                                            </button>
-                                            <input id="qty" type="number" value='{{$item->quantity}}' name="quantity" class="border-0 w-14 text-center text-gray-700 bg-inherit outline-none focus:outline-none hover:text-black focus:text-black" />
-                                            <button class="text-gray-500 focus:outline-none focus:text-gray-600">
-                                                <svg class="h-5 w-5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                                </svg>
-                                            </button>
+                                            <div class="relative">
+                                                <input type="hidden" name="id" value="{{ $item->id }}">
+                                                <input type="number" name="quantity" value="{{ $item->quantity }}" class=" block p-3 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Поиск по сайту" required>
+                                                <button type="submit" class="text-white absolute right-1.5 px-3 py-1.5 bottom-1.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm">Подтвердить</button>
+                                            </div>
                                         </form>
                                     </div>
                                 </td>
@@ -90,26 +85,25 @@
                                         {{ Cart::getTotal() }} &#8381;
                                     </div>
                                 </div>
-                                <a href="{{url('/payments')}}">
+                                <form action="{{route('cart.checkout')}}" method="post">
+                                    @csrf
                                     <button class="flex rounded-lg justify-center w-full px-10 py-3 mt-6 font-medium text-white uppercase bg-gray-800 shadow item-center hover:bg-gray-700 focus:shadow-outline focus:outline-none">
                                         <svg aria-hidden="true" data-prefix="far" data-icon="credit-card" class="w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
                                             <path fill="currentColor" d="M527.9 32H48.1C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48.1 48h479.8c26.6 0 48.1-21.5 48.1-48V80c0-26.5-21.5-48-48.1-48zM54.1 80h467.8c3.3 0 6 2.7 6 6v42H48.1V86c0-3.3 2.7-6 6-6zm467.8 352H54.1c-3.3 0-6-2.7-6-6V256h479.8v170c0 3.3-2.7 6-6 6zM192 332v40c0 6.6-5.4 12-12 12h-72c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h72c6.6 0 12 5.4 12 12zm192 0v40c0 6.6-5.4 12-12 12H236c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h136c6.6 0 12 5.4 12 12z" />
                                         </svg>
                                         <span class="ml-2 mt-5px">Перейти к оформлению</span>
                                     </button>
-                                </a>
+                                </form>
                             </div>
                         </div>
                     </div>
+
+                    @else
+                    <h4 class="text-2xl font-medium text-slate-700">Корзина пуста</h4>
+                    <p class="text-lg">Воспользуйтесь поиском, чтобы найти всё что нужно.</p>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <script>
-        $("#qty").change(function() {
-            input = document.getElementById("qty")
-            console.log(input.value)
-        });
-    </script>
 </x-app-layout>

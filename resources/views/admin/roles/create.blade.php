@@ -1,6 +1,7 @@
 <x-admin-layout>
   <div class="flex p-2">
-    <a href="{{ route('admin.roles.index') }}" class="px-4 py-2 bg-green-700 hover:bg-green-500 text-slate-100 rounded-md">Страница роли</a>
+    <a href="{{ route('admin.roles.index') }}" class="px-4 py-2 duration-75 text-white hover:text-black bg-green-700 hover:bg-green-500 
+                rounded-md">Роли</a>
   </div>
   <div class="flex flex-col">
     <div class="space-y-8 divide-y divide-gray-200 w-1/2 mt-10">

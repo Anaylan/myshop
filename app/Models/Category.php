@@ -17,8 +17,8 @@ class Category extends Model
 
     // We have a category and it hasMany posts
 
-    public function posts()
+    public function products()
     {
-        return $this->hasMany(Post::class);
+        return $this->hasMany(Product::class);
     }
 }

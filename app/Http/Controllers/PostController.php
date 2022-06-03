@@ -5,11 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('permission:post-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:post-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:post-delete', ['only' => ['destroy']]);
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -20,15 +29,17 @@ class PostController extends Controller
         if ($request->search) {
             $posts = Post::where('title', 'like', '%' . $request->search . '%')
                 ->orWhere('body', 'like', '%' . $request->search . '%')->latest()->paginate(15);
-        } elseif ($request->category) {
-            $posts = Category::where('name', $request->category)->firstOrFail()->posts()->paginate(15)->withQueryString();
         } else {
             $posts = Post::latest()->paginate(15);
         }
 
-        $categories = Category::all();
+        return view('blog.index', compact('posts'));
+    }
 
-        return view('blog.index', compact('posts', 'categories'));
+    public function admin(Request $request)
+    {
+        $posts = Post::latest()->paginate(10);
+        return view('admin.posts.index', compact('posts'));
     }
 
     /**
@@ -39,16 +50,13 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-
         $request->validate([
             'title' => 'required',
             'image' => 'required | image',
             'body' => 'required',
-            'category_id' => 'required'
         ]);
 
         $title = $request->input('title');
-        $category_id = $request->input('category_id');
 
         if (Post::latest()->first() !== null) {
             $postId = Post::latest()->first()->id + 1;
@@ -66,16 +74,16 @@ class PostController extends Controller
 
         $post = new Post();
         $post->title = $title;
-        $post->category_id = $category_id;
         $post->slug = $slug;
         $post->user_id = $user_id;
         $post->body = $body;
-        $post->imagePrevPath = $imagePrevPath;
-        $post->imagePath = $imagePath;
+        $post->img_prev = $imagePrevPath;
+        $post->image = $imagePath;
 
         $post->save();
 
-        return redirect()->back()->with('status', 'Пост был успешно создан!');
+        return to_route('admin.news.index')
+            ->with('success', 'Пост был успешно создан!');
     }
 
     /**
@@ -86,9 +94,87 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        $category = $post->category;
+        return view('blog.show', compact('post'));
+    }
 
-        $relatedPosts = $category->posts()->where('id', '!=', $post->id)->latest()->take(3)->get();
-        return view('blog.show', compact('post', 'relatedPosts'));
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        return view('admin.posts.create');
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  string  $slug
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Post $post)
+    {
+        return view('admin.posts.edit', compact('post'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $slug
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Post $post)
+    {
+        $request()->validate([
+            'title' => 'required',
+            'image' => 'required | image',
+            'body' => 'required'
+        ]);
+
+        $title = $request->input('title');
+
+        $postId = $post->id;
+        $slug = Str::slug($title, '-') . '-' . $postId;
+        $body = $request->input('body');
+
+        //File upload
+        $imagePath = 'storage/' . $request->file('image')->store('posts', 'public');
+        $imagePrevPath = 'storage/' . $request->file('img_prev')->store('preview', 'public');
+
+        $post->title = $title;
+        $post->slug = $slug;
+        $post->body = $body;
+        $post->img_prev = $imagePrevPath;
+        $post->image = $imagePath;
+
+        $post->save();
+
+        return to_route('admin.posts.index')
+            ->with('status', 'Пост был успешно изменён!');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    // public function destroy($slug)
+    // {
+    //     $post = Post::where('slug', $slug);
+    //     $post->delete();
+
+    //     return redirect('/news')
+    //         ->with('message', 'Пост был успешно удалён!');
+    // }
+
+    public function destroy(Post $post)
+    {
+        $post->delete();
+
+        return back()->with('status', 'Пост был успешно удалён!');
     }
 }

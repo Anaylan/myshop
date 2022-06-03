@@ -1,6 +1,7 @@
 <x-admin-layout>
     <div class="flex p-2">
-        <a href="{{ route('admin.roles.index') }}" class="px-4 py-2 bg-green-700 hover:bg-green-500 text-slate-100 rounded-md">Страница роли</a>
+        <a href="{{ route('admin.roles.index') }}" class="px-4 py-2 duration-75 text-white hover:text-black bg-green-700 hover:bg-green-500 
+                rounded-md">Роли</a>
     </div>
     <div class="flex flex-col p-2 bg-slate-100">
         <div class="space-y-8 divide-y divide-gray-200 w-1/2 mt-10">
@@ -24,7 +25,7 @@
     </div>
     <div class="mt-6 p-2 bg-slate-100">
         <h2 class="text-2xl font-semibold">Права ролей</h2>
-        <div class="flex space-x-2 mt-4 p-2">
+        <div class="grid grid-cols-7 gap-2 mt-4 p-2">
             @if ($role->permissions)
             @foreach ($role->permissions as $role_permission)
             <form class="px-4 py-2 bg-red-500 hover:bg-red-700 text-white rounded-md" method="POST" action="{{ route('admin.roles.permissions.revoke', [$role->id, $role_permission->id]) }}" onsubmit="return confirm('Вы уверены?');">

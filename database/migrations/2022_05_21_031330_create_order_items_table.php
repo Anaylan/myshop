@@ -15,7 +15,20 @@ return new class extends Migration
     {
         Schema::create('order_items', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->string('name', 100);
+            $table->decimal('price', 10, 2)->unsigned();
+            $table->tinyInteger('quantity')->unsigned()->default(1);
+            $table->decimal('cost', 10, 2)->unsigned();
+            // внешний ключ, ссылается на поле id таблицы orders
+            $table->foreignId('order_id')
+                ->references('id')
+                ->on('orders')
+                ->OnDelete('cascade');
+            // внешний ключ, ссылается на поле id таблицы products
+            $table->foreignId('product_id')
+                ->references('id')
+                ->on('products')
+                ->OnDelete('null');
         });
     }
 

@@ -10,9 +10,17 @@ use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role:admin');
+        $this->middleware('permission:user-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:user-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:user-delete', ['only' => ['destroy']]);
+    }
+
     public function index()
     {
-        $users = User::all();
+        $users = User::latest()->paginate(10);
 
         return view('admin.users.index', compact('users'));
     }
@@ -66,10 +74,10 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         if ($user->hasRole('admin')) {
-            return back()->with('message', 'you are admin.');
+            return back()->with('message', 'Вы администратор.');
         }
         $user->delete();
 
-        return back()->with('message', 'User deleted.');
+        return back()->with('message', 'Пользователь удалён.');
     }
 }
