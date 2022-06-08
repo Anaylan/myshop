@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+
+use function PHPUnit\Framework\isEmpty;
 
 class ProductController extends Controller
 {
@@ -16,6 +17,7 @@ class ProductController extends Controller
      */
     function __construct()
     {
+        $this->middleware('permission:product-list', ['only' => ['index']]);
         $this->middleware('permission:product-create', ['only' => ['create', 'store']]);
         $this->middleware('permission:product-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:product-delete', ['only' => ['destroy']]);
@@ -51,14 +53,14 @@ class ProductController extends Controller
                 }
             }
         }
-
-        if ($request->filled('price_from')) {
+        if ($request->input('price_from')) {
             $builder->where('price', '>=', $request->price_from);
         }
 
-        if ($request->filled('price_to')) {
+        if ($request->input('price_to')) {
             $builder->where('price', '<=', $request->price_to);
         }
+
 
         $products = $builder->paginate(15);
         $categories = \App\Models\Category::all();
@@ -155,7 +157,6 @@ class ProductController extends Controller
     {
         request()->validate([
             'title' => 'required',
-            'image' => 'required | image',
             'body' => 'required',
             'category_id' => 'required'
         ]);
@@ -167,13 +168,17 @@ class ProductController extends Controller
         $category = $request->input('category_id');
 
         //File upload
-        $imagePath = 'storage/' . $request->file('image')->store('products', 'public');
+
+        if (!isEmpty($request->file('image'))) {
+            $imagePath = 'storage/' . $request->file('image')->store('products', 'public');
+            $product->image = $imagePath;
+        }
 
         $product->name = $title;
         $product->price = $price;
         $product->category_id = $category;
         $product->description = $body;
-        $product->image = $imagePath;
+
 
         $product->save();
 

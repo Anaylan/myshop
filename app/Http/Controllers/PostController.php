@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+
+use function PHPUnit\Framework\isEmpty;
 
 class PostController extends Controller
 {
 
     public function __construct()
     {
+        $this->middleware('permission:post-list', ['only' => ['index']]);
         $this->middleware('permission:post-create', ['only' => ['create', 'store']]);
         $this->middleware('permission:post-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:post-delete', ['only' => ['destroy']]);
@@ -94,7 +96,9 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        return view('blog.show', compact('post'));
+
+        return view('blog.show')
+            ->with('post', Post::where('id', $post->id)->first());
     }
 
 
@@ -128,9 +132,8 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        $request()->validate([
+        $request->validate([
             'title' => 'required',
-            'image' => 'required | image',
             'body' => 'required'
         ]);
 
@@ -141,18 +144,24 @@ class PostController extends Controller
         $body = $request->input('body');
 
         //File upload
-        $imagePath = 'storage/' . $request->file('image')->store('posts', 'public');
-        $imagePrevPath = 'storage/' . $request->file('img_prev')->store('preview', 'public');
-
         $post->title = $title;
         $post->slug = $slug;
         $post->body = $body;
-        $post->img_prev = $imagePrevPath;
-        $post->image = $imagePath;
+
+        if (!isEmpty($request->file('image'))) {
+            $imagePath = 'storage/' . $request->file('image')->store('posts', 'public');
+            $post->image = $imagePath;
+        }
+
+        if (!isEmpty($request->file('img_prev'))) {
+            $imagePrevPath = 'storage/' . $request->file('img_prev')->store('preview', 'public');
+            $post->img_prev = $imagePrevPath;
+        }
+
 
         $post->save();
 
-        return to_route('admin.posts.index')
+        return to_route('admin.news.index')
             ->with('status', 'Пост был успешно изменён!');
     }
 
@@ -162,19 +171,10 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    // public function destroy($slug)
-    // {
-    //     $post = Post::where('slug', $slug);
-    //     $post->delete();
-
-    //     return redirect('/news')
-    //         ->with('message', 'Пост был успешно удалён!');
-    // }
-
     public function destroy(Post $post)
     {
         $post->delete();
 
-        return back()->with('status', 'Пост был успешно удалён!');
+        return back()->with('success', 'Пост был успешно удалён!');
     }
 }

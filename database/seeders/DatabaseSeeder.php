@@ -37,6 +37,9 @@ class DatabaseSeeder extends Seeder
         $this->call(CreateAdminUserSeeder::class);
         $this->command->info('Администратор создан!');
 
+        $this->call(TestUser::class);
+        $this->command->info('Тестовый пользователь создан!');
+
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',

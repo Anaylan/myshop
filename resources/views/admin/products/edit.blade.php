@@ -4,7 +4,7 @@
             <section class="container">
                 <div class="flex p-2">
                     <a href="{{ route('admin.products.index') }}" class="px-4 py-2 bg-green-700 duration-75 hover:bg-green-500 text-slate-100
-                     rounded-md">Страница права</a>
+                     rounded-md">Товары</a>
                 </div>
                 @include('includes.flash-message')
                 <!-- Contact Form -->
@@ -28,7 +28,7 @@
                         @enderror
                         <!-- Image -->
                         <x-label class="mt-3" for="image"><span>Изображение</span></x-label>
-                        <input type="file" id="image" value="{{ $product->image }}" name="image" />
+                        <input type="file" id="image" value="{{ $product->image }}" name="image" accept=".jpg, .jpeg, .png .webp .tiff" />
                         @error('image')
                         {{-- Поле $attributeValue есть/должно быть $validationRule --}}
                         <p style="color: red; margin-bottom:25px;">{{ $message }}</p>

@@ -9,7 +9,7 @@
                 @include('includes.flash-message')
                 <!-- Contact Form -->
                 <div>
-                    <form action="{{ route('admin.news.store') }}" class="flex flex-col" method="post" enctype="multipart/form-data">
+                    <form action="{{ route('admin.posts.store') }}" class="flex flex-col" method="post" enctype="multipart/form-data">
                         @csrf
                         <!-- Title -->
                         <x-label for="title"><span>Заголовок</span></x-label>

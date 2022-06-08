@@ -1,8 +1,8 @@
 <x-app-layout>
-    <div class="container justify-center">
+    <div class="mxl:container px-6 mx-auto flex-auto">
         <h1 class="mb-4">Оформить заказ</h1>
         <div class="flex justify-center bg-white p-3 pb-5">
-            <div class="space-y-8 divide-y divide-gray-200 w-1/2 mt-10">
+            <div class="space-y-8 divide-y divide-gray-200 xl:w-1/2 lg:w-2/3 md:w-3/4 w-full mt-10">
                 <form method="POST" action="{{ route('cart.saveorder') }}">
                     @csrf
                     <div class="sm:col-span-6">

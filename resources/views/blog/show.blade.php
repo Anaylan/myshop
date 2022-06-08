@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="container">
-        <section class="bg-white relative border flex flex-col overflow-hidden rounded-lg">
-            <div class="min-h-full w-auto" data-aos="fade-left">
+        <section class="bg-white relative border-gray-300 border flex flex-col overflow-hidden rounded-lg">
+            <div class="min-h-full w-auto border-inherit border-b" data-aos="fade-left">
                 <img src="{{asset($post->image)}}" class="h-full w-full" alt="" />
             </div>
             <div class="flex flex-col flex-1 gap-3 px-3 py-2">
@@ -9,12 +9,12 @@
                 <div class="about-text">
                     {!! $post->body !!}
                 </div>
-                <p class="border-t text-right bg-gradient-to-b mt-auto">
+                <p class="border-t border-inherit text-right bg-gradient-to-b mt-auto">
                     {{ $post->created_at->diffForHumans() }}
                 </p>
             </div>
         </section>
-        <section class="mt-6 bg-white relative border flex flex-col overflow-hidden rounded-lg px-4">
+        <section class="mt-6 bg-white border-gray-300 relative border flex flex-col overflow-hidden rounded-lg px-4">
             <h2 class="pt-3 pb-2 text-gray-800 text-lg">Комментарии</h2>
             <form method="post" action="{{ route('comment.add') }}" class="w-full">
                 <div class="flex flex-wrap -mx-3 mb-6">
@@ -36,6 +36,5 @@
             </div>
         </section>
     </div>
-    </section>
-    </div>
+
 </x-app-layout>

@@ -19,8 +19,6 @@ return new class extends Migration
             $table->text('description');
             $table->foreignId('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->string('image');
-            $table->unsignedInteger('sold_count')->default(0);
-            $table->unsignedInteger('review_count')->default(0);
             $table->decimal('price', 10, 2);
             $table->timestamps();
         });

@@ -1,21 +1,21 @@
 <x-app-layout>
-    <div class="container px-6 mx-auto">
+    <div class="xl:container px-6 mx-auto flex-auto">
         <h1 class="text-2xl font-extrabold">Корзина</h1>
         <div class="flex justify-center my-6">
-            <div class="flex flex-col w-full p-8 text-gray-800 rounded-lg bg-white shadow-lg">
+            <div class="flex flex-col w-full p-8 text-gray-800 bg-white shadow-lg pin-r pin-y md:w-4/5 lg:w-4/5  flex-grow">
                 <div class="flex-1">
                     @if (isset($cartItems))
-
-                    <table class="w-full text-sm lg:text-base" cellspacing="0">
+                    <table class="w-full text-sm lg:text-base flex-grow" cellspacing="0">
                         <thead>
                             <tr class="h-12 uppercase">
                                 <th class="hidden md:table-cell"></th>
                                 <th class="text-left">Наименование</th>
                                 <th class="lg:text-right text-left pl-5 lg:pl-0">
-                                    <span class="hidden lg:inline">Количество</span>
+                                    <span class="md:hidden" title="Quantity">Кол-во</span>
+                                    <span class="hidden md:inline">Количество</span>
                                 </th>
-                                <th class="hidden text-right md:table-cell">Цена за штуку</th>
-                                <th class="text-right">Итого</th>
+                                <th class="hidden text-right lg:table-cell">Цена за штуку</th>
+                                <th class="text-right table-cell">Итого</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -28,43 +28,38 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <a href="#">
+                                    <a href="{{ route('products.show', ['product' => $item->id]) }}">
                                         <p class="mb-2 md:ml-4">{{ $item->name }}</p>
-
-                                        <form action="{{ route('cart.remove') }}" method="POST">
-                                            @csrf
-                                            <input type="hidden" value="{{ $item->id }}" name="id">
-                                            <button type="submit" class="text-gray-700 md:ml-4">
-                                                <small>(Удалить)</small>
-                                            </button>
-                                        </form>
-
                                     </a>
+                                    <form action="{{ route('cart.remove') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" value="{{ $item->id }}" name="id">
+                                        <button type="submit" class="text-gray-700 md:ml-4">
+                                            <small>(Удалить)</small>
+                                        </button>
+                                    </form>
                                 </td>
-                                <td class="justify-center mt-6 md:justify-end md:flex">
-                                    <div class="flex flex-row justify-end h-8">
-                                        <form action="{{ route('cart.update') }}" method="post" class="my-auto">
-                                            @csrf
-                                            <div class="relative">
-                                                <input type="hidden" name="id" value="{{ $item->id }}">
-                                                <input type="number" name="quantity" value="{{ $item->quantity }}" class=" block p-3 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Поиск по сайту" required>
-                                                <button type="submit" class="text-white absolute right-1.5 px-3 py-1.5 bottom-1.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm">Подтвердить</button>
-                                            </div>
-                                        </form>
-                                    </div>
+                                <td class=" table-cell origin-center">
+                                    <form action="{{ route('cart.update') }}" method="post" class="my-auto w-24 mx-0">
+                                        @csrf
+                                        <div class="relative">
+                                            <input type="hidden" name="id" value="{{ $item->id }}">
+                                            <input type="number" name="quantity" value="{{ $item->quantity }}" class="block p-3 w-24 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Поиск по сайту" required>
+                                            <button type="submit" class="text-white absolute right-1.5 px-3 py-1.5 bottom-1.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm"><i class="fas fa-check"></i></button>
+                                        </div>
+                                    </form>
                                 </td>
-                                <td class="hidden text-right md:table-cell">
+                                <td class="hidden text-right lg:table-cell">
                                     <span class="text-sm font-medium lg:text-base">
                                         {{ $item->price }} &#8381;
                                     </span>
                                 </td>
-                                <td class="hidden text-right md:table-cell">
+                                <td class="text-right table-cell">
                                     <form action="{{ route('cart.remove') }}" method="POST">
                                         @csrf
                                         <input type="hidden" value="{{ $item->id }}" name="id">
                                         {{ $item->price * $item->quantity}} &#8381;
                                     </form>
-
                                 </td>
                             </tr>
                             @endforeach

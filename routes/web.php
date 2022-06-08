@@ -19,35 +19,39 @@ Route::group([
     'as' => 'blog.',
     'prefix' => 'news'
 ], function () {
-    // To blog page
-    Route::resource('', \App\Http\Controllers\PostController::class);
-    Route::get('', [\App\Http\Controllers\PostController::class, 'index'])->name('index');
-    // To single blog post
-    Route::get('{post}', [\App\Http\Controllers\PostController::class, 'show'])->name('show');
+    // Новости
+    Route::get('/', [\App\Http\Controllers\PostController::class, 'index'])->name('index');
+    Route::get('/{post}', [\App\Http\Controllers\PostController::class, 'show'])->name('show');
 });
-
-
-
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
 Route::group([
     'as' => 'products.',
     'prefix' => 'store'
 ], function () {
-    // To blog page
+    // Товары
     Route::get('/', [\App\Http\Controllers\ProductController::class, 'index'])->name('list');
     Route::get('{product}', [\App\Http\Controllers\ProductController::class, 'show'])->name('show');
 });
 
+// Комментарии к новостям
 Route::post('/comment/store', [\App\Http\Controllers\User\CommentController::class, 'store'])->middleware('auth')->name('comment.add');
 Route::post('/reply/store', [\App\Http\Controllers\User\CommentController::class, 'replyStore'])->middleware('auth')->name('reply.add');
 
-Route::post('/reply/store', [\App\Http\Controllers\User\ReviewController::class, 'store'])->middleware('auth')->name('review.add');
 
-Route::resource('/orders', \App\Http\Controllers\User\OrderController::class)->middleware(['auth', 'verified']);
-Route::get('/orders/{order}', [\App\Http\Controllers\User\OrderController::class, 'show'])->middleware(['auth', 'verified'])->name('orders.show');
+// Отзывы к товару
+Route::post('/review/store', [\App\Http\Controllers\User\ReviewController::class, 'store'])->middleware('auth')->name('review.add');
 
-Route::get('/payments', function () {
-    return view('indev');
+Route::group([
+    'as' => 'orders.',
+    'prefix' => 'orders'
+], function () {
+    // Новости
+    Route::get('/', [\App\Http\Controllers\User\OrderController::class, 'index'])->name('index');
+    Route::get('/{order}', [\App\Http\Controllers\User\OrderController::class, 'show'])->name('show');
 });
+
 
 Route::group([
     'as' => 'cart.',
@@ -81,8 +85,8 @@ Route::middleware(['auth', 'role:admin'])->name('admin.')->prefix('admin')->grou
     Route::post('/users/{user}/permissions', [\App\Http\Controllers\Admin\UserController::class, 'givePermission'])->name('users.permissions');
     Route::delete('/users/{user}/permissions/{permission}', [\App\Http\Controllers\Admin\UserController::class, 'revokePermission'])->name('users.permissions.revoke');
 
-    Route::resource('/news', \App\Http\Controllers\PostController::class);
-    Route::get('/news', [\App\Http\Controllers\PostController::class, 'admin'])->name('news.index');
+    Route::resource('/posts', \App\Http\Controllers\PostController::class);
+    Route::get('/posts', [\App\Http\Controllers\PostController::class, 'admin'])->name('news.index');
 
     Route::resource('/products', \App\Http\Controllers\ProductController::class);
     Route::get('/products', [\App\Http\Controllers\ProductController::class, 'admin'])->name('products.index');

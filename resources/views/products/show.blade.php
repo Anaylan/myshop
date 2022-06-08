@@ -1,10 +1,10 @@
 <x-app-layout>
-    <section class="container bg-white flex-auto p-4 rounded-lg border">
-        <div class="flex items-center">
-            <div class=" w-full">
-                <img class="h-full max-w-4xl" src="{{ url($product->image) }}" alt="{{$product->name}}">
+    <section class="container bg-white overflow-hidden flex-auto p-4 rounded-lg border">
+        <div class="md:flex md:items-center">
+            <div class="w-full h-64 md:w-1/2 lg:h-96">
+                <img class="h-full w-full rounded-md object-contain max-w-lg mx-auto" src="{{ url($product->image) }}" alt="{{$product->name}}">
             </div>
-            <div class="w-auto mx-6 mt-5 flex-auto">
+            <div class="w-full max-w-lg mx-auto mt-5 md:ml-8 md:mt-0 md:w-1/2">
                 <h3 class="text-2xl font-medium text-gray-700 uppercase">{{ $product->name }}</h3>
                 <hr class="my-3">
                 <div class="descr">
@@ -31,22 +31,26 @@
                 </div>
             </div>
         </div>
-        <section class="my-3">
+        <div class="my-3">
             <p class="text-2xl font-medium text-gray-700">Похожие</p>
-            <div class="grid grid-cols-6 gap-3">
-                @foreach ($relatedProducts as $relatedPost )
-                <a href="{{ route('products.show', ['product' => $relatedPost]) }}">
-                    <div class="border bg-white rounded-lg overflow-hidden">
-                        <img src="{{asset($relatedPost->image)}}" alt="" loading="lazy" />
-                        <h4 class="p-2">
-                            {{$relatedPost->name}}
-                        </h4>
+            <div class="related">
+                <div class="swiper-wrapper">
+                    @foreach ($relatedProducts as $relatedPost )
+                    <div class="swiper-slide border rounded-md hover:bg-black shadow-md overflow-hidden">
+                        <a class="w-full max-w-sm mx-auto" href="{{ route('products.show', ['product' => $relatedPost]) }}">
+                            <div class="flex z-50 items-end justify-end h-56 w-full bg-no-repeat border-b bg-contain bg-center" style="background-image: url('{{asset($relatedPost->image)}}');">
+                            </div>
+                            <div class="px-5 py-3 hover:bg-black">
+                                <h3 class="text-gray-700 uppercase">{{$relatedPost->name}}</h3>
+                                <span class="text-gray-500 mt-2">{{$relatedPost->price}}</span>
+                            </div>
+                        </a>
                     </div>
-                </a>
-                @endforeach
+                    @endforeach
+                </div>
             </div>
-        </section>
-        <section class="mt-6 bg-white relative border flex flex-col overflow-hidden rounded-lg px-4">
+        </div>
+        <div class="mt-6 bg-white relative border flex flex-col overflow-hidden rounded-lg px-4">
             <h2 class="pt-3 pb-2 text-gray-800 text-lg">Отзывы</h2>
             <form method="post" action="{{ route('review.add') }}" class="w-full">
                 <div class="flex flex-wrap -mx-3 mb-6">
@@ -66,6 +70,6 @@
             <div class="pt-3 mb-12 border-t border-gray-300">
                 @include('includes.review', ['reviews' => $product->reviews, 'product_id' => $product->id])
             </div>
-        </section>
+        </div>
     </section>
 </x-app-layout>

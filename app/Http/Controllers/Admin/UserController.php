@@ -12,7 +12,7 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('role:admin');
+        $this->middleware('permission:user-list', ['only' => ['index']]);
         $this->middleware('permission:user-create', ['only' => ['create', 'store']]);
         $this->middleware('permission:user-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:user-delete', ['only' => ['destroy']]);
@@ -36,39 +36,39 @@ class UserController extends Controller
     public function assignRole(Request $request, User $user)
     {
         if ($user->hasRole($request->role)) {
-            return back()->with('message', 'Role exists.');
+            return back()->with('message', 'Роль уже существует.');
         }
 
         $user->assignRole($request->role);
-        return back()->with('message', 'Role assigned.');
+        return back()->with('message', 'Роль назначена.');
     }
 
     public function removeRole(User $user, Role $role)
     {
         if ($user->hasRole($role)) {
             $user->removeRole($role);
-            return back()->with('message', 'Role removed.');
+            return back()->with('message', 'Роль удалена.');
         }
 
-        return back()->with('message', 'Role not exists.');
+        return back()->with('message', 'Роль не существует.');
     }
 
     public function givePermission(Request $request, User $user)
     {
         if ($user->hasPermissionTo($request->permission)) {
-            return back()->with('message', 'Permission exists.');
+            return back()->with('message', 'Право доступа уже есть.');
         }
         $user->givePermissionTo($request->permission);
-        return back()->with('message', 'Permission added.');
+        return back()->with('message', 'Право доступа добавлено.');
     }
 
     public function revokePermission(User $user, Permission $permission)
     {
         if ($user->hasPermissionTo($permission)) {
             $user->revokePermissionTo($permission);
-            return back()->with('message', 'Permission revoked.');
+            return back()->with('message', 'Разрешение отозвано.');
         }
-        return back()->with('message', 'Permission does not exists.');
+        return back()->with('message', 'Право доступа не существует.');
     }
 
     public function destroy(User $user)

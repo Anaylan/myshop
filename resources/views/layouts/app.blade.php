@@ -24,7 +24,7 @@
     <div class="min-h-screen flex-col flex">
         @include('layouts.navigation')
         <!-- Page Content -->
-        <main class="my-8 flex-auto">
+        <main class="sm:my-8 my-0 flex-auto">
             {{ $slot }}
         </main>
         @include('layouts.footer')

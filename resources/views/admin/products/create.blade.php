@@ -26,7 +26,7 @@
                         @enderror
                         <!-- Image -->
                         <x-label class="mt-3" for="image"><span>Изображение</span></x-label>
-                        <input type="file" id="image" name="image" />
+                        <input type="file" id="image" name="image" accept=".jpg, .jpeg, .png .webp .tiff" />
                         @error('image')
                         {{-- Поле $attributeValue есть/должно быть $validationRule --}}
                         <p style="color: red; margin-bottom:25px;">{{ $message }}</p>

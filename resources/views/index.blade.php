@@ -6,18 +6,20 @@
                 <div class="swiper">
                     <div class="swiper-wrapper">
                         @foreach($posts as $post)
-                        <div class="swiper-slide bg-white overflow-hidden rounded-lg border">
-                            <a href="{{ route('blog.show', $post) }}" class="flex flex-col">
-                                <img src="{{ asset($post->img_prev) }}" alt="{{$post->title}}" class=" border-b border-gray-300" />
-                                <div class="px-3 py-2 flex flex-col flex-auto">
-                                    <h4 class="text-md font-medium">
-                                        {{ $post->title }}
-                                    </h4>
-                                    <p class="text-sm mt-auto border-t text-gray-600 justify-end text-right">
-                                        {{ $post->created_at->diffForHumans() }}
-                                    </p>
-                                </div>
-                            </a>
+                        <div class="swiper-slide">
+                            <div class="hover:shadow shadow-none bg-white overflow-hidden rounded-lg border">
+                                <a href="{{ route('blog.show', $post) }}" class="flex flex-col hover:shadow shadow-none">
+                                    <img src="{{ asset($post->img_prev) }}" alt="{{$post->title}}" class="border-b h-52 border-gray-300" />
+                                    <div class="px-3 py-2 flex flex-col flex-auto">
+                                        <h4 class="text-md font-medium">
+                                            {{ $post->title }}
+                                        </h4>
+                                        <p class="text-sm mt-auto border-t text-gray-600 justify-end text-right">
+                                            {{ $post->created_at->diffForHumans() }}
+                                        </p>
+                                    </div>
+                                </a>
+                            </div>
                         </div>
                         @endforeach
                     </div>
@@ -32,14 +34,13 @@
                 <div class="swiper">
                     <div class="swiper-wrapper">
                         @foreach($products as $product)
-                        <div class="swiper-slide flex flex-col bg-white overflow-hidden rounded-md border">
+                        <div class="swiper-slide flex flex-col bg-white overflow-hidden rounded-md border hover:translate-y-11 hover:animate-pulse">
                             <a href="{{ route('products.show', ['product' => $product->id]) }}" class="flex justify-center pt-1 border-b">
-                                <img src="{{ url($product->image) }}" alt="" class="w-auto max-h-60">
+                                <img src="{{ url($product->image) }}" alt="" class="w-auto h-56">
                             </a>
                             <div class="px-4 py-3 flex flex-col flex-auto">
                                 <a class="mb-2 border-b" href="{{ route('products.show', ['product' => $product->id]) }}">
                                     <h3 class="text-gray-900 font-bold text-lg">{{ $product->name }}</h3>
-                                    {{ $product->category->name }}
                                 </a>
                                 <form action="{{ route('cart.store') }}" method="POST" class="mt-auto" enctype="multipart/form-data">
                                     @csrf
@@ -50,7 +51,7 @@
                                     <input type="hidden" value="1" name="quantity">
                                     <div class="flex item-center justify-between">
                                         <h1 class="text-gray-700 mt-a font-bold text-md whitespace-nowrap float-left content-center">{{ $product->price }} &#8381;</h1>
-                                        <button class="px-4 py-2 bg-gray-800 text-white text-xs font-bold float-right uppercase rounded">Добавить в корзину</button>
+                                        <button class="px-4 py-2 bg-gray-800 text-white text-xs font-bold float-right uppercase rounded"><i class="fas fa-cart-arrow-down"></i></button>
                                     </div>
                                 </form>
                             </div>
@@ -65,6 +66,4 @@
             </div>
         </div>
     </div>
-    </div>
-
 </x-app-layout>
