@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot name="title">Заказ {{$order->id}}</x-slot>
     <div class="container">
         <div class="bg-white p-3 overflow-hidden shadow-sm sm:rounded-lg">
             <div class="card-header">
@@ -55,7 +56,6 @@
                                 <h1 class="ml-2 font-bold uppercase text-left">Номер заказа</h1>
                                 <p>{{ $order->id }}</p>
                             </div>
-
                             <div class="p-4">
                                 <div class="flex justify-between pt-4 border-b">
                                     <div class="lg:px-4 lg:py-2 m-2 text-lg lg:text-xl font-bold text-center text-gray-800">

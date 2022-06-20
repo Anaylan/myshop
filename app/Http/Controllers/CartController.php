@@ -68,11 +68,11 @@ class CartController extends Controller
     public function saveOrder(Request $request)
     {
         // проверяем данные формы оформления
-        $this->validate($request, [
-            'name' => 'required|max:255',
-            'email' => 'required|email|max:255',
-            'phone' => 'required|max:255',
-            'address' => 'required|max:255',
+        $request->validate([
+            'name' => 'required | max:255',
+            'email' => 'required | email | max:255',
+            'phone' => 'required | max:255',
+            'address' => 'required | max:255',
         ]);
 
         // валидация пройдена, сохраняем заказ

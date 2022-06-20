@@ -30,7 +30,7 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         // Создаём конструктор запросов
-        $builder = Product::latest()->orderBy('id', 'asc');
+        $builder = Product::latest();
 
         // search Параметры, используемые для продуктов совпадения
         if ($search = $request->input('search', '')) {
@@ -42,6 +42,23 @@ class ProductController extends Controller
             });
         }
         // Есть ли параметр заказа для отправки, если да, назначаем его переменной $order
+
+
+        if ($category = $request->input('category_id', '')) {
+            $like = $category;
+            $builder->where(function ($query) use ($like) {
+                $query->where('category_id', 'like', $like);
+            });
+        }
+
+        if ($request->input('price_from')) {
+            $builder->where('price', '>=', $request->price_from);
+        }
+
+        if ($request->input('price_to')) {
+            $builder->where('price', '<=', $request->price_to);
+        }
+
         // order Параметр используется для управления правилами сортировки товаров.
         if ($order = $request->input('order', '')) {
             // заканчивается ли он на _asc или _desc
@@ -53,23 +70,12 @@ class ProductController extends Controller
                 }
             }
         }
-        if ($request->input('price_from')) {
-            $builder->where('price', '>=', $request->price_from);
-        }
 
-        if ($request->input('price_to')) {
-            $builder->where('price', '<=', $request->price_to);
-        }
-
-
-        $products = $builder->paginate(15);
+        $products = $builder->paginate();
         $categories = \App\Models\Category::all();
 
         return view('products.index', [
             'products' => $products,
-            'filters'  => [
-                'order'  => $order,
-            ],
             'categories' => $categories
         ]);
     }

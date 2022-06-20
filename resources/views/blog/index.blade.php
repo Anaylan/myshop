@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot name="title">Новости</x-slot>
     <section class="container md:mt-0 mt-4">
         @include('includes.flash-message')
         <div class="mb-4 px-3 xl:px-0 flex flex-row justify-between">
@@ -18,10 +19,9 @@
         </div>
         <div class="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 grid-cols-2 px-3 xl:px-0 gap-5 mb-5">
             @forelse($posts as $post)
-            <div class="bg-white hover:scale-110 duration-150 overflow-hidden border-gray-300 relative rounded-lg shadow-md border flex-auto">
+            <div class="bg-white hover:-translate-y-6 duration-150 overflow-hidden border-gray-300 relative rounded-lg shadow-md border flex-auto">
                 <a href="{{ route('blog.show', $post) }}" target="_blank" class="h-full max-h-full flex flex-col">
                     <img src="{{ asset($post->img_prev) }}" alt="{{$post->title}}" class=" border-b border-gray-300" />
-
                     <div class="px-3 py-2 flex flex-col flex-auto">
                         <h4 class="text-lg font-medium">
                             {{ $post->title }}

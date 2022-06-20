@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot name="title">{{$post->title}}</x-slot>
     <div class="container">
         <section class="bg-white relative border-gray-300 border flex flex-col overflow-hidden rounded-lg">
             <div class="min-h-full w-auto border-inherit border-b" data-aos="fade-left">

@@ -1,10 +1,9 @@
 <x-app-layout>
+    <x-slot name="title">История заказов</x-slot>
     <div class="max-w-7xl mx-auto px-8">
         <div class="bg-white p-3 overflow-hidden shadow-sm sm:rounded-lg">
             <h4 class="text-2xl font-medium text-left text-gray-700 mb-2">История заказов</h4>
-
             <div class="relative overflow-x-auto sm:rounded-lg">
-
                 @foreach($orders as $order)
                 <div class="rounded-lg border border-gray-300 overflow-hidden mb-3">
                     <div class="border-b border-inherit px-4 py-2 flex justify-between">

@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot name="title">Корзина</x-slot>
     <div class="xl:container px-6 mx-auto flex-auto">
         <h1 class="text-2xl font-extrabold">Корзина</h1>
         <div class="flex justify-center my-6">

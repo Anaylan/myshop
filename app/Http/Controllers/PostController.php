@@ -30,9 +30,9 @@ class PostController extends Controller
     {
         if ($request->search) {
             $posts = Post::where('title', 'like', '%' . $request->search . '%')
-                ->orWhere('body', 'like', '%' . $request->search . '%')->latest()->paginate(15);
+                ->orWhere('body', 'like', '%' . $request->search . '%')->latest()->paginate();
         } else {
-            $posts = Post::latest()->paginate(15);
+            $posts = Post::latest()->paginate();
         }
 
         return view('blog.index', compact('posts'));

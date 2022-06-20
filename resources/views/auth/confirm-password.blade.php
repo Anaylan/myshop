@@ -1,4 +1,5 @@
 <x-guest-layout>
+    <x-slot name="title">Вход</x-slot>
     <x-auth-card>
         <x-slot name="logo">
             <a href="/">

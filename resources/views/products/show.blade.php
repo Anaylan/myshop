@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot name="title">{{ $product->name }}</x-slot>
     <section class="container bg-white overflow-hidden flex-auto p-4 rounded-lg border">
         <div class="md:flex md:items-center">
             <div class="w-full h-64 md:w-1/2 lg:h-96">
@@ -34,13 +35,13 @@
         <div class="my-3">
             <p class="text-2xl font-medium text-gray-700">Похожие</p>
             <div class="related">
-                <div class="swiper-wrapper">
+                <div class="swiper-wrapper py-3">
                     @foreach ($relatedProducts as $relatedPost )
-                    <div class="swiper-slide border rounded-md hover:bg-black shadow-md overflow-hidden">
+                    <div class="swiper-slide border rounded-md hover:shadow-xl duration-300 shadow">
                         <a class="w-full max-w-sm mx-auto" href="{{ route('products.show', ['product' => $relatedPost]) }}">
                             <div class="flex z-50 items-end justify-end h-56 w-full bg-no-repeat border-b bg-contain bg-center" style="background-image: url('{{asset($relatedPost->image)}}');">
                             </div>
-                            <div class="px-5 py-3 hover:bg-black">
+                            <div class="px-5 py-3 ">
                                 <h3 class="text-gray-700 uppercase">{{$relatedPost->name}}</h3>
                                 <span class="text-gray-500 mt-2">{{$relatedPost->price}}</span>
                             </div>

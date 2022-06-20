@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot name="title">Главная</x-slot>
     <div class="container">
         <div class="bg-white p-3 overflow-hidden shadow-sm sm:rounded-lg">
             <div class="pb-4">
@@ -6,7 +7,7 @@
                 <div class="swiper">
                     <div class="swiper-wrapper">
                         @foreach($posts as $post)
-                        <div class="swiper-slide">
+                        <div class="swiper-slide hover:shadow-xl duration-300">
                             <div class="hover:shadow shadow-none bg-white overflow-hidden rounded-lg border">
                                 <a href="{{ route('blog.show', $post) }}" class="flex flex-col hover:shadow shadow-none">
                                     <img src="{{ asset($post->img_prev) }}" alt="{{$post->title}}" class="border-b h-52 border-gray-300" />
@@ -30,11 +31,11 @@
                 </div>
             </div>
             <div class="pb-3">
-                <h1 class="text-2xl font-medium text-left text-gray-700 mb-2">Последние продукты</h1>
+                <h1 class="text-2xl font-medium text-left text-gray-700 mb-2">Последние товары</h1>
                 <div class="swiper">
                     <div class="swiper-wrapper">
                         @foreach($products as $product)
-                        <div class="swiper-slide flex flex-col bg-white overflow-hidden rounded-md border hover:translate-y-11 hover:animate-pulse">
+                        <div class="swiper-slide flex flex-col bg-white overflow-hidden rounded-md border hover:shadow-xl duration-300">
                             <a href="{{ route('products.show', ['product' => $product->id]) }}" class="flex justify-center pt-1 border-b">
                                 <img src="{{ url($product->image) }}" alt="" class="w-auto h-56">
                             </a>

@@ -18,7 +18,7 @@ return [
     ],
     'filter' => 'Фильтр',
     'reset' => 'Сброс',
-    'price_from' => 'Цена от',
+    'price_from' => 'от',
     'to' => 'до',
     'login' => 'Войти',
     'logout' => 'Выйти',
